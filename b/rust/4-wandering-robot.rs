@@ -51,6 +51,11 @@ fn success_chance(W: usize, H: usize, L: usize, U: usize, R: usize, D: usize) ->
     // Zero-indexed, please! (But still left/right inclusive.)
     let (L, U, R, D) = (L - 1, U - 1, R - 1, D - 1);
 
+    // todo: instead, compute using ints and then divide out only at the end!
+    // This should be possible, since I'm pretty surethe final probability is
+    // just a function of the number of distinct routes to the destination,
+    // and the dimensions of the grid.
+
     // H by W grid.
     // Row indices wrap mod 2!
     let mut grid = vec![0.0; 2 * W];
