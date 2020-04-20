@@ -52,30 +52,34 @@ fn success_chance(W: usize, H: usize, L: usize, U: usize, R: usize, D: usize) ->
     let (L, U, R, D) = (L - 1, U - 1, R - 1, D - 1);
 
     // todo: instead, compute using ints and then divide out only at the end!
-    // This should be possible, since I'm pretty surethe final probability is
+    // This should be possible, since I'm pretty sure the final probability is
     // just a function of the number of distinct routes to the destination,
     // and the dimensions of the grid.
 
     // H by W grid.
     // Row indices wrap mod 2!
-    let mut grid = vec![0.0; 2 * W];
+    // Laid out in memory *transposed*, for cache locality:
+    // - The 2 columns of memory are rows of the grid.
+    // - The W rows of memory are columns of the grid.
+    // Access grid[h][w] as grid[w*2 + h%2].
+    let mut grid = vec![0.0; W * 2];
 
     for h in 0..H {
         for w in 0..W {
-            grid[h % 2 * W + w] = if h == 0 && w == 0 {
+            grid[w * 2 + h % 2] = if h == 0 && w == 0 {
                 1.0
             } else if U <= h && h <= D && L <= w && w <= R {
                 0.0
             } else {
                 let mut above = if h != 0 {
-                    grid[(h - 1) % 2 * W + w]
+                    grid[w * 2 + (h - 1) % 2]
                 } else {
                     0.0
                 };
                 above *= if w == W - 1 { 2.0 } else { 1.0 };
 
                 let mut left = if w != 0 {
-                    grid[h % 2 * W + (w - 1)]
+                    grid[(w - 1) * 2 + h % 2]
                 } else {
                     0.0
                 };
@@ -86,5 +90,5 @@ fn success_chance(W: usize, H: usize, L: usize, U: usize, R: usize, D: usize) ->
         }
     }
 
-    grid[(H - 1) % 2 * W + (W - 1)]
+    grid[(W - 1) * 2 + (H - 1) % 2]
 }
