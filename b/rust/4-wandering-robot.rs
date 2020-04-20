@@ -48,30 +48,38 @@ fn main() {
 }
 
 fn success_chance(W: usize, H: usize, L: usize, U: usize, R: usize, D: usize) -> f64 {
-    // 1-indexed in both dimensions!
+    // Zero-indexed, please! (But still left/right inclusive.)
+    let (L, U, R, D) = (L - 1, U - 1, R - 1, D - 1);
+
+    // H by W grid.
     // Row indices wrap mod 2!
-    let mut grid = Vec::new();
-    for _ in 0..2 {
-        grid.push(vec![std::f64::NAN; W + 1]);
-    }
+    let mut grid = vec![0.0; 2 * W];
 
-    for h in 1..H + 1 {
-        for w in 1..W + 1 {
-            if h == 1 && w == 1 {
-                grid[h % 2][w] = 1.0;
+    for h in 0..H {
+        for w in 0..W {
+            grid[h % 2 * W + w] = if h == 0 && w == 0 {
+                1.0
             } else if U <= h && h <= D && L <= w && w <= R {
-                grid[h % 2][w] = 0.0;
+                0.0
             } else {
-                let mut above = if h != 1 { grid[(h - 1) % 2][w] } else { 0.0 };
-                above *= if w == W { 2.0 } else { 1.0 };
+                let mut above = if h != 0 {
+                    grid[(h - 1) % 2 * W + w]
+                } else {
+                    0.0
+                };
+                above *= if w == W - 1 { 2.0 } else { 1.0 };
 
-                let mut left = if w != 1 { grid[h % 2][w - 1] } else { 0.0 };
-                left *= if h == H { 2.0 } else { 1.0 };
+                let mut left = if w != 0 {
+                    grid[h % 2 * W + (w - 1)]
+                } else {
+                    0.0
+                };
+                left *= if h == H - 1 { 2.0 } else { 1.0 };
 
-                grid[h % 2][w] = (above + left) / 2.0
+                (above + left) / 2.0
             }
         }
     }
 
-    grid[H % 2][W]
+    grid[(H - 1) % 2 * W + (W - 1)]
 }
