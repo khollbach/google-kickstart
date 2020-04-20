@@ -55,6 +55,11 @@ fn success_chance(W: usize, H: usize, L: usize, U: usize, R: usize, D: usize) ->
     // This should be possible, since I'm pretty sure the final probability is
     // just a function of the number of distinct routes to the destination,
     // and the dimensions of the grid.
+    //
+    // Problem: the numbers would be exponentially large. We're computing
+    // Pascal's triangle here, and (n choose n/2) is supposedly
+    // Theta(2^n / sqrt(n)), so that's not gonna work. (Where n = W + H.)
+    //let mut grid = vec![0u64; W * 2];
 
     // H by W grid.
     // Row indices wrap mod 2!

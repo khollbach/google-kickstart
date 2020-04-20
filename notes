@@ -1,3 +1,9 @@
+After the round there's analysis posted for the questions.
+
+Also the `interview.solutions` discord is a great source of python3 solutions.
+
+
+
 Their python3 doesn't support type annotations of variables, or f-strings. Watch out for these because the feedback is exactly 'Runtime Error' and no further information :(
 
 Their python3 has a restricting memory limit, and when it is exceeded, you get 'Rutime Error' instead of (e.g.) MLE.
